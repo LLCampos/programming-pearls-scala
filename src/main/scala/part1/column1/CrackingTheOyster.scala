@@ -25,7 +25,8 @@ object MergeSort {
       list
     } else {
       val subListSize = (list.size / 2.0).ceil.toInt
-      val sortedSubLists = list.grouped(subListSize).map(sort).toList
+      val (subList1, subList2) = list.splitAt(subListSize)
+      val sortedSubLists = List(subList1, subList2).map(sort)
       sortHelper(sortedSubLists.head, sortedSubLists.last)
     }
 
