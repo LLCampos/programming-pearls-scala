@@ -8,8 +8,8 @@ import scala.annotation.tailrec
  * Creates file with N random non-repeating numbers.
  */
 object CreateExampleFile {
-  private val FilePath = "src/test/scala/resources/part1/column1/listSize1000000.txt"
   private val N = 1000000
+  private val FilePath = s"src/test/scala/resources/part1/column1/listSize$N.txt"
   private val Random = scala.util.Random
 
   def main(args: Array[String]): Unit =
