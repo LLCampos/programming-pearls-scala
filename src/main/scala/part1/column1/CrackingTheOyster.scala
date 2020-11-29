@@ -23,30 +23,33 @@ trait SortingAlgorithm {
   def sort(list: Seq[Int]): Seq[Int]
 }
 
+/**
+ * Lessons:
+ *
+ * 1 - Prepending is much faster than appending
+ */
 object MergeSort extends SortingAlgorithm {
   def sort(list: Seq[Int]): Seq[Int] =
     if (list.size <= 1) {
       list
     } else {
-      val subListSize = (list.size / 2.0).ceil.toInt
-      val (subList1, subList2) = list.splitAt(subListSize)
-      val sortedSubLists = List(subList1, subList2).map(sort)
-      mergeSort(sortedSubLists.head, sortedSubLists.last)
+      val subListSize = list.size / 2
+      val (subListX, subListY) = list.splitAt(subListSize)
+      mergeSort(sort(subListX), sort(subListY))
     }
 
-  @tailrec
-  private def mergeSort(subList1: Seq[Int], subList2: Seq[Int], newList: Seq[Int] = Seq.empty): Seq[Int] =
+  private def mergeSort(subList1: Seq[Int], subList2: Seq[Int]): Seq[Int] =
     (subList1.headOption, subList2.headOption) match {
       case (Some(a), Some(b)) if a <= b =>
-        mergeSort(subList1.drop(1), subList2, newList :+ a)
+        a +: mergeSort(subList1.drop(1), subList2)
       case (Some(a), Some(b)) if b < a =>
-        mergeSort(subList1, subList2.drop(1), newList :+ b)
+        b +: mergeSort(subList1, subList2.drop(1))
       case (Some(a), None) =>
-        mergeSort(subList1.drop(1), subList2, newList :+ a)
+        a +: mergeSort(subList1.drop(1), subList2)
       case (None, Some(b)) =>
-        mergeSort(subList1, subList2.drop(1), newList :+ b)
+        b +: mergeSort(subList1, subList2.drop(1))
       case (None, None) =>
-        newList
+        subList1
     }
 }
 
