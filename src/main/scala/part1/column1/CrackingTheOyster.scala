@@ -42,11 +42,11 @@ object MergeSort extends SortingAlgorithm {
 
   private def mergeSort(listX: Seq[Int], listY: Seq[Int]): Seq[Int] =
     (listX, listY) match {
-      case (x :: subListXTail, y :: subListYTail) =>
+      case (x :: listXTail, y :: listYTail) =>
         if (x <= y)
-          x +: mergeSort (subListXTail, listY)
+          x +: mergeSort (listXTail, listY)
         else
-          y +: mergeSort(listX, subListYTail)
+          y +: mergeSort(listX, listYTail)
       case (_, Nil) => listX
       case (Nil, _) => listY
     }
