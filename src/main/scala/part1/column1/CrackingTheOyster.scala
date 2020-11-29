@@ -27,20 +27,20 @@ object MergeSort {
       val subListSize = (list.size / 2.0).ceil.toInt
       val (subList1, subList2) = list.splitAt(subListSize)
       val sortedSubLists = List(subList1, subList2).map(sort)
-      sortHelper(sortedSubLists.head, sortedSubLists.last)
+      mergeSort(sortedSubLists.head, sortedSubLists.last)
     }
 
   @tailrec
-  private def sortHelper(subList1: Seq[Int], subList2: Seq[Int], newList: Seq[Int] = Seq.empty): Seq[Int] =
+  private def mergeSort(subList1: Seq[Int], subList2: Seq[Int], newList: Seq[Int] = Seq.empty): Seq[Int] =
     (subList1.headOption, subList2.headOption) match {
       case (Some(a), Some(b)) if a <= b =>
-        sortHelper(subList1.drop(1), subList2, newList :+ a)
+        mergeSort(subList1.drop(1), subList2, newList :+ a)
       case (Some(a), Some(b)) if b < a =>
-        sortHelper(subList1, subList2.drop(1), newList :+ b)
+        mergeSort(subList1, subList2.drop(1), newList :+ b)
       case (Some(a), None) =>
-        sortHelper(subList1.drop(1), subList2, newList :+ a)
+        mergeSort(subList1.drop(1), subList2, newList :+ a)
       case (None, Some(b)) =>
-        sortHelper(subList1, subList2.drop(1), newList :+ b)
+        mergeSort(subList1, subList2.drop(1), newList :+ b)
       case (None, None) =>
         newList
     }
