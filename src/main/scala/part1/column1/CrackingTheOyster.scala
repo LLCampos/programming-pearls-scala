@@ -49,3 +49,38 @@ object MergeSort extends SortingAlgorithm {
         newList
     }
 }
+
+object ScalaDefaultSort extends SortingAlgorithm {
+  def sort(list: Seq[Int]): Seq[Int] = list.sorted
+}
+
+object ScalaMergeSort extends SortingAlgorithm {
+  def sort(list: Seq[Int]): Seq[Int] = scala.util.Sorting.stableSort(list)
+}
+
+// https://www.programmersought.com/article/50122609997/
+object ProgrammerSoughtMergeSort extends SortingAlgorithm {
+
+  def sort(list: Seq[Int]): Seq[Int] = {
+
+    def merged(xList: Seq[Int], yList: Seq[Int]): Seq[Int] = {
+      (xList, yList) match {
+        case (Nil, _) => yList
+        case (_, Nil) => xList
+        case (x :: xTail, y :: yTail) =>
+          if (x < y) {
+            x +: merged(xTail, yList)
+          } else {
+            y +: merged(xList, yTail)
+          }
+      }
+    }
+
+    val n = list.length / 2
+    if (n == 0) list
+    else {
+      val (x, y) = list splitAt n
+      merged(sort(x), sort(y))
+    }
+  }
+}

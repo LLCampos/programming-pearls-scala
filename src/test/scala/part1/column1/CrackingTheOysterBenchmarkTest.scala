@@ -7,7 +7,7 @@ class CrackingTheOysterBenchmarkTest extends Bench.LocalTime {
   //override def measurer = new Measurer.MemoryFootprint
 
   private val fileSizeGen = Gen.enumeration("fileSize")(1000, 2500, 5000)
-  private val sortingAlgoGen = Gen.enumeration("algorithm")(MergeSort)
+  private val sortingAlgoGen = Gen.enumeration("algorithm")(MergeSort, ScalaDefaultSort, ScalaMergeSort, ProgrammerSoughtMergeSort)
   private val inputs = Gen.crossProduct(fileSizeGen, sortingAlgoGen)
 
   performance of "CrackingTheOyster" in {
