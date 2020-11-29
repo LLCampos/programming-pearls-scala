@@ -12,14 +12,18 @@ import scala.io.Source
  */
 
 object CrackingTheOyster {
-  def sortFile(fileName: String): Seq[Int] = {
+  def sortFile(fileName: String, sortingAlgorithm: SortingAlgorithm): Seq[Int] = {
     //noinspection SourceNotClosed
     val values = Source.fromFile(fileName).getLines().toList.map(_.toInt)
-    MergeSort.sort(values)
+    sortingAlgorithm.sort(values)
   }
 }
 
-object MergeSort {
+trait SortingAlgorithm {
+  def sort(list: Seq[Int]): Seq[Int]
+}
+
+object MergeSort extends SortingAlgorithm {
   def sort(list: Seq[Int]): Seq[Int] =
     if (list.size <= 1) {
       list
