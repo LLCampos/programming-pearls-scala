@@ -1,6 +1,5 @@
 package part1.column1
 
-import scala.annotation.tailrec
 import scala.io.Source
 
 /**
@@ -27,6 +26,7 @@ trait SortingAlgorithm {
  * Lessons:
  *
  * 1 - Prepending is much faster than appending
+ * 2 - Less cases in pattern matching makes things faster
  */
 object MergeSort extends SortingAlgorithm {
   def sort(list: Seq[Int]): Seq[Int] =
@@ -38,18 +38,15 @@ object MergeSort extends SortingAlgorithm {
       mergeSort(sort(subListX), sort(subListY))
     }
 
-  private def mergeSort(subList1: Seq[Int], subList2: Seq[Int]): Seq[Int] =
-    (subList1.headOption, subList2.headOption) match {
-      case (Some(a), Some(b)) if a <= b =>
-        a +: mergeSort(subList1.drop(1), subList2)
-      case (Some(a), Some(b)) if b < a =>
-        b +: mergeSort(subList1, subList2.drop(1))
-      case (Some(a), None) =>
-        a +: mergeSort(subList1.drop(1), subList2)
-      case (None, Some(b)) =>
-        b +: mergeSort(subList1, subList2.drop(1))
-      case (None, None) =>
-        subList1
+  private def mergeSort(subListX: Seq[Int], subListY: Seq[Int]): Seq[Int] =
+    (subListX, subListY) match {
+      case (x :: subListXTail, y :: subListYTail) =>
+        if (x <= y)
+          x +: mergeSort (subListXTail, subListY)
+        else
+          y +: mergeSort(subListX, subListYTail)
+      case (subListX, Nil) => subListX
+      case (Nil, subListY) => subListY
     }
 }
 
