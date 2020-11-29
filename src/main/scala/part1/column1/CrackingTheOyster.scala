@@ -27,6 +27,8 @@ trait SortingAlgorithm {
  *
  * 1 - Prepending is much faster than appending
  * 2 - Less cases in pattern matching makes things faster
+ *
+ * Improved my algorithm after this one: https://www.programmersought.com/article/50122609997/
  */
 object MergeSort extends SortingAlgorithm {
   def sort(list: Seq[Int]): Seq[Int] =
@@ -38,15 +40,15 @@ object MergeSort extends SortingAlgorithm {
       mergeSort(sort(subListX), sort(subListY))
     }
 
-  private def mergeSort(subListX: Seq[Int], subListY: Seq[Int]): Seq[Int] =
-    (subListX, subListY) match {
+  private def mergeSort(listX: Seq[Int], listY: Seq[Int]): Seq[Int] =
+    (listX, listY) match {
       case (x :: subListXTail, y :: subListYTail) =>
         if (x <= y)
-          x +: mergeSort (subListXTail, subListY)
+          x +: mergeSort (subListXTail, listY)
         else
-          y +: mergeSort(subListX, subListYTail)
-      case (subListX, Nil) => subListX
-      case (Nil, subListY) => subListY
+          y +: mergeSort(listX, subListYTail)
+      case (_, Nil) => listX
+      case (Nil, _) => listY
     }
 }
 
@@ -56,31 +58,4 @@ object ScalaDefaultSort extends SortingAlgorithm {
 
 object ScalaMergeSort extends SortingAlgorithm {
   def sort(list: Seq[Int]): Seq[Int] = scala.util.Sorting.stableSort(list)
-}
-
-// https://www.programmersought.com/article/50122609997/
-object ProgrammerSoughtMergeSort extends SortingAlgorithm {
-
-  def sort(list: Seq[Int]): Seq[Int] = {
-
-    def merged(xList: Seq[Int], yList: Seq[Int]): Seq[Int] = {
-      (xList, yList) match {
-        case (Nil, _) => yList
-        case (_, Nil) => xList
-        case (x :: xTail, y :: yTail) =>
-          if (x < y) {
-            x +: merged(xTail, yList)
-          } else {
-            y +: merged(xList, yTail)
-          }
-      }
-    }
-
-    val n = list.length / 2
-    if (n == 0) list
-    else {
-      val (x, y) = list splitAt n
-      merged(sort(x), sort(y))
-    }
-  }
 }

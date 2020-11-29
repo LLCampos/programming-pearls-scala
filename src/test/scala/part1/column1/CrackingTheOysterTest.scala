@@ -6,7 +6,7 @@ import org.specs2.specification.core.Fragments
 class CrackingTheOysterTest extends Specification {
 
   "CrackingTheOysterTest" should {
-    Fragments.foreach(Seq(MergeSort, ScalaDefaultSort, ScalaMergeSort, ProgrammerSoughtMergeSort)) { algorithm =>
+    Fragments.foreach(Seq(MergeSort, ScalaDefaultSort, ScalaMergeSort)) { algorithm =>
       s"${algorithm.getClass.getName}" should {
         "be able to sort small list with odd size" in {
           val result = CrackingTheOyster.sortFile("src/test/scala/resources/part1/column1/listSize3.txt", algorithm)
