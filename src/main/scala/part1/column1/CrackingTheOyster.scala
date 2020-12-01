@@ -44,7 +44,7 @@ object MergeSort extends SortingAlgorithm {
     (listX, listY) match {
       case (x :: listXTail, y :: listYTail) =>
         if (x <= y)
-          x +: mergeSort (listXTail, listY)
+          x +: mergeSort(listXTail, listY)
         else
           y +: mergeSort(listX, listYTail)
       case (_, Nil) => listX
