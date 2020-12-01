@@ -1,5 +1,6 @@
 package part1.column1
 
+import scala.annotation.tailrec
 import scala.io.Source
 
 /**
@@ -37,18 +38,19 @@ object MergeSort extends SortingAlgorithm {
     } else {
       val subListSize = list.size / 2
       val (subListX, subListY) = list.splitAt(subListSize)
-      mergeSort(sort(subListX), sort(subListY))
+      mergeSort(sort(subListX), sort(subListY)).reverse
     }
 
-  private def mergeSort(listX: Seq[Int], listY: Seq[Int]): Seq[Int] =
+  @tailrec
+  private def mergeSort(listX: Seq[Int], listY: Seq[Int], listNew: Seq[Int] = Seq.empty): Seq[Int] =
     (listX, listY) match {
       case (x :: listXTail, y :: listYTail) =>
         if (x <= y)
-          x +: mergeSort(listXTail, listY)
+          mergeSort(listXTail, listY, x +: listNew)
         else
-          y +: mergeSort(listX, listYTail)
-      case (_, Nil) => listX
-      case (Nil, _) => listY
+          mergeSort(listX, listYTail, y +: listNew)
+      case (_, Nil) => listX.reverse ++ listNew
+      case (Nil, _) => listY.reverse ++ listNew
     }
 }
 

@@ -6,7 +6,7 @@ import org.scalameter.picklers.noPickler.instance
 class CrackingTheOysterBenchmarkTest extends Bench.LocalTime {
   //override def measurer = new Measurer.MemoryFootprint
 
-  private val fileSizeGen = Gen.enumeration("fileSize")(1000, 2500, 5000)
+  private val fileSizeGen = Gen.enumeration("fileSize")(1000, 2500, 5000, 10000, 100000)
   private val sortingAlgoGen = Gen.enumeration("algorithm")(MergeSort, ScalaDefaultSort, ScalaMergeSort)
   private val inputs = Gen.crossProduct(fileSizeGen, sortingAlgoGen)
 
