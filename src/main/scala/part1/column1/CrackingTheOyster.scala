@@ -1,5 +1,6 @@
 package part1.column1
 
+import java.io.{File, PrintWriter}
 import scala.annotation.tailrec
 import scala.io.Source
 
@@ -12,11 +13,25 @@ import scala.io.Source
  */
 
 object CrackingTheOyster {
+
+  // 32 bit per integer
+  // 1 MB = 1000 kilobytes = 1000 * 1000 bytes = 100000 bytes = 100000 * 8 bits = 800000 bits
+  // 800000 bits / 32 bit/integer = 250000 integers
+  private val ChunkLength = 250000
+
   def sortFile(fileName: String, sortingAlgorithm: SortingAlgorithm): Seq[Int] = {
     //noinspection SourceNotClosed
     val values = Source.fromFile(fileName).getLines().toList.map(_.toInt)
     sortingAlgorithm.sort(values)
   }
+
+  def externalSortFile(
+    fileName: String,
+    resultFileName:
+    String, sortingAlgorithm: ExternalSortingAlgorithm,
+    chunkLength: Int = ChunkLength
+  ): Unit =
+    sortingAlgorithm.sort(fileName, resultFileName, chunkLength)
 }
 
 trait SortingAlgorithm {
@@ -61,3 +76,71 @@ object ScalaDefaultSort extends SortingAlgorithm {
 object ScalaMergeSort extends SortingAlgorithm {
   def sort(list: Seq[Int]): Seq[Int] = scala.util.Sorting.stableSort(list)
 }
+
+
+trait ExternalSortingAlgorithm {
+  // Writes result file to disk
+  def sort(fileName: String, resultFileName: String, chunkLength: Int): Unit
+}
+
+object ExternalMergeSort extends ExternalSortingAlgorithm {
+
+  case class Chunk(
+    iterator: Iterator[Int],
+    currentValue: Option[Int],
+    index: Int
+  )
+
+  private val DirToSaveTmpFiles = "/tmp/external_merge_sort"
+
+  def sort(fileName: String, resultFileName: String, chunkLength: Int): Unit = {
+    sortChunksAndSaveToFiles(fileName, chunkLength)
+
+    val tmpSortedFiles = new File(DirToSaveTmpFiles).listFiles()
+
+    val chunksIterators = tmpSortedFiles
+      .map(Source.fromFile)
+      .map(_.getLines().map(_.toInt))
+      .zipWithIndex
+      .map(v => Chunk(v._1, v._1.nextOption(), v._2))
+
+    val outputPrintWriter = new PrintWriter(new File(resultFileName))
+    merge(chunksIterators, outputPrintWriter)
+    outputPrintWriter.close()
+    tmpSortedFiles.map(_.delete())
+  }
+
+  @tailrec
+  private def merge(chunks: Seq[Chunk], outputPrintWriter: PrintWriter): Unit =
+    if (chunks.isEmpty) {
+      ()
+    } else {
+      val minChunk = chunks.minBy(_.currentValue.get)
+      outputPrintWriter.write(minChunk.currentValue.get + "\n")
+      val updatedChunks = chunks.map(v => {
+        if (v.index == minChunk.index) {
+          Chunk(v.iterator, v.iterator.nextOption(), v.index)
+        } else v
+      }).filter(_.currentValue.nonEmpty)
+      merge(updatedChunks, outputPrintWriter)
+    }
+
+  private def sortChunksAndSaveToFiles(fileName: String, chunkLength: Int): Unit = {
+    val inputFile = Source.fromFile(fileName)
+    inputFile
+      .getLines()
+      .map(_.toInt)
+      .grouped(chunkLength)
+      .foreach(l => writeToFile(l.sorted))
+    inputFile.close()
+  }
+
+  private def writeToFile(l: Seq[Int]): Unit = {
+    val fileName = java.util.UUID.randomUUID.toString
+    val pw = new PrintWriter(new File(s"$DirToSaveTmpFiles/$fileName"))
+    l.foreach(i => pw.write(i.toString + "\n"))
+    pw.close()
+  }
+}
+
+// TODO: Solution with streams?
