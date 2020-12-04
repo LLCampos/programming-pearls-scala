@@ -27,8 +27,8 @@ object CrackingTheOyster {
 
   def externalSortFile(
     fileName: String,
-    resultFileName:
-    String, sortingAlgorithm: ExternalSortingAlgorithm,
+    resultFileName: String,
+    sortingAlgorithm: ExternalSortingAlgorithm,
     chunkLength: Int = ChunkLength
   ): Unit =
     sortingAlgorithm.sort(fileName, resultFileName, chunkLength)
