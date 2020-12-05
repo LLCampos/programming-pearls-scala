@@ -143,4 +143,21 @@ object ExternalMergeSort extends ExternalSortingAlgorithm {
   }
 }
 
-// TODO: Solution with streams?
+object BitSort {
+  def sort(fileName: String): Seq[Int] = {
+    //noinspection SourceNotClosed
+    val intsIterator = Source.fromFile(fileName).getLines().map(_.toInt)
+    val initialBitVector = Vector.fill(9999999)(false)
+    val filledBitVector = fillBitVector(initialBitVector, intsIterator)
+    filledBitVector.zipWithIndex.filter(_._1).map(_._2) // TODO: zipWithIndex increases memory consumption, which defeats the purpose
+  }
+
+  @tailrec
+  def fillBitVector(bitVector: Seq[Boolean], inputIterator: Iterator[Int]): Seq[Boolean] =
+    inputIterator.nextOption() match {
+      case Some(v) =>
+        val updatedVector = bitVector.updated(v, true)
+        fillBitVector(updatedVector, inputIterator)
+      case None => bitVector
+    }
+}

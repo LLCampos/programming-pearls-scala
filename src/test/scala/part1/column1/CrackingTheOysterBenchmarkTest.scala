@@ -28,4 +28,12 @@ class CrackingTheOysterBenchmarkTest extends Bench.LocalTime {
       }
     }
   }
+
+  performance of "BitSort" in {
+    measure method "sort" in {
+      using(fileSizeGen) in { size =>
+        BitSort.sort(s"src/test/scala/resources/part1/column1/listSize$size.txt")
+      }
+    }
+  }
 }

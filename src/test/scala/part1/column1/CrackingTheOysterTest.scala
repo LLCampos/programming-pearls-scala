@@ -44,6 +44,28 @@ class CrackingTheOysterTest extends Specification with BeforeEach {
       }
     }
 
+    "bit sort" should {
+      "be able to sort small list with odd size" in {
+        val result = BitSort.sort(s"$PathToTestFiles/listSize3.txt")
+        result must be equalTo List(1111111, 2222222, 3333333)
+      }
+
+      "be able to sort small list with odd size" in {
+        val result = BitSort.sort(s"$PathToTestFiles/listSize4.txt")
+        result must be equalTo List(1111111, 2222222, 3333333, 4444444)
+      }
+
+      "return unmodified list of only one element" in {
+        val result = BitSort.sort(s"$PathToTestFiles/listSize1.txt")
+        result must be equalTo List(2222222)
+      }
+
+      "return empty list on empty life" in {
+        val result = BitSort.sort(s"$PathToTestFiles/listSize0.txt")
+        result must be equalTo List()
+      }
+    }
+
     "internal sort" should {
       Fragments.foreach(Seq(ExternalMergeSort)) { algorithm =>
         s"${algorithm.getClass.getName}" should {
