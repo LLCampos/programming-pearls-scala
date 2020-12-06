@@ -149,7 +149,7 @@ object BitSort {
     val intsIterator = Source.fromFile(fileName).getLines().map(_.toInt)
     val initialBitVector = Vector.fill(9999999)(false)
     val filledBitVector = fillBitVector(initialBitVector, intsIterator)
-    filledBitVector.zipWithIndex.filter(_._1).map(_._2) // TODO: zipWithIndex increases memory consumption, which defeats the purpose
+    filledBitVector.view.zipWithIndex.filter(_._1).map(_._2).toSeq
   }
 
   @tailrec
