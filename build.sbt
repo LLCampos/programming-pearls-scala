@@ -7,7 +7,10 @@ scalaVersion := "2.13.4"
 resolvers += "Sonatype OSS Snapshots" at
   "https://oss.sonatype.org/content/repositories/releases"
 
-libraryDependencies += "org.specs2" %% "specs2-core" % "4.10.0" % "test"
+val specs2Version = "4.10.0"
+
+libraryDependencies += "org.specs2" %% "specs2-core" % specs2Version % "test"
+libraryDependencies += "org.specs2" %% "specs2-scalacheck" % specs2Version % "test"
 libraryDependencies += "com.storm-enroute" %% "scalameter" % "0.19" % "test"
 
 testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework")
