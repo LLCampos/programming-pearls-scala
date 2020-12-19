@@ -9,7 +9,7 @@ class AnagramFinderBenchmarkTest extends Bench.LocalTime {
   private val FilesPath = "src/test/scala/resources/part1/column2"
 
   private val anagramFinderAlgoGen = Gen.enumeration("algorithm")(AnagramFinder1, AnagramFinder2)
-  private val fileSizeGen = Gen.enumeration("fileSize")("Small")
+  private val fileSizeGen = Gen.enumeration("fileSize")("Small", "Big")
   private val inputs = Gen.crossProduct(anagramFinderAlgoGen, fileSizeGen)
 
   performance of "AnagramFinder" in {
