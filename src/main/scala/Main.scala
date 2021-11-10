@@ -1,7 +1,7 @@
-import part1.column1.BitSort
+import part1.column2.{AnagramFinder1, AnagramFinder2}
 
 object Main {
   def main(args: Array[String]): Unit = {
-    println(BitSort.sort("src/test/scala/resources/part1/column1/listSize1000000.txt"))
+    println(AnagramFinder2.find("src/test/scala/resources/part1/column2/wordsBig.txt"))
   }
 }
